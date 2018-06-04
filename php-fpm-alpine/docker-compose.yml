@@ -1,0 +1,8 @@
+version: "2"
+
+services:
+    # Web container.
+    app:
+        container_name: opt_web
+        build:
+            context: docker

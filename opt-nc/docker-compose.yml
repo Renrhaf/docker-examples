@@ -1,0 +1,9 @@
+version: "2"
+
+services:
+    # Web container.
+    # Log into it using "docker exec -it opt_web sh -l".
+    app:
+        container_name: opt_web
+        build:
+            context: docker

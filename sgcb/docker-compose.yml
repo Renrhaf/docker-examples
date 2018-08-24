@@ -3,6 +3,6 @@ version: "2"
 services:
     # Web container.
     app:
-        container_name: opt_web
+        container_name: sgcb_web
         build:
             context: docker

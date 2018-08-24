@@ -1,0 +1,56 @@
+version: "2"
+
+services:
+    app:
+        links:
+            - db
+        volumes:
+            - .:/app
+        expose:
+            - "9001"
+        extra_hosts:
+            - "smit.local:127.0.0.1"
+        environment:
+            - XDEBUG_CONFIG=remote_host=172.16.36.16
+
+    # Nginx container.
+    nginx:
+        image: nginx
+        container_name: smit_nginx
+        depends_on:
+            - app
+        links:
+            - app
+        ports:
+            - "80:80"
+            - "443:443"
+        volumes_from:
+            - app:ro
+        volumes:
+            - "./docker/nginx.conf:/etc/nginx/nginx.conf"
+            - "./docker/.htpasswd:/etc/nginx/.htpasswd"
+            - "./docker/certificates/ssl-cert-snakeoil.pem:/etc/ssl/certs/ssl-cert-snakeoil.pem"
+            - "./docker/certificates/ssl-cert-snakeoil.key:/etc/ssl/private/ssl-cert-snakeoil.key"
+
+    # Database container.
+	db:
+		image: mysql:5.7
+		container_name: smit_mysql
+		command: --max_allowed_packet=32505856
+		environment:
+			MYSQL_ROOT_PASSWORD: root
+		ports:
+			- "3306:3306"
+
+	# PHPMyAdmin container.
+    pma:
+        container_name: caledonia_pma
+        image: phpmyadmin/phpmyadmin
+        depends_on:
+            - db
+        environment:
+            PMA_HOST: db
+            PMA_USER: root
+            PMA_PASSWORD: root
+        ports:
+            - "8080:80"

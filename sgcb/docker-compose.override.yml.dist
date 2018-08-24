@@ -1,0 +1,50 @@
+version: '2'
+
+services:
+    app:
+        depends_on:
+            - db
+        volumes:
+            - .:/var/www/html
+        ports:
+            - "80:80"
+            - "443:443"
+        expose:
+            - 9000
+        extra_hosts:
+            - "sgcb.local:127.0.0.1"
+        environment:
+            XDEBUG_CONFIG: remote_host=172.16.61.98
+
+    # Database container.
+    db:
+        image: mysql:5.7
+        container_name: sgcb_mysql
+        command: --max_allowed_packet=32505856
+        volumes:
+            - ./dumps:/dumps
+        ports:
+            - "3306:3306"
+        environment:
+            MYSQL_ROOT_PASSWORD: root
+
+    # PHPMyAdmin container.
+    pma:
+        container_name: sgcb_pma
+        image: phpmyadmin/phpmyadmin
+        depends_on:
+            - db
+        environment:
+            PMA_HOST: db
+            PMA_USER: root
+            PMA_PASSWORD: root
+        ports:
+            - "8080:80"
+
+    # Mailhog container.
+    mailhog:
+        container_name: sgcb_mailhog
+        image: mailhog/mailhog
+        ports:
+          - "1025:1025"
+          - "8025:8025"

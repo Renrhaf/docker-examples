@@ -3,7 +3,6 @@ version: "2"
 services:
     app:
         links:
-            - nginx
             - elasticsearch
             - db
             - memcached
@@ -22,11 +21,20 @@ services:
     nginx:
         image: nginx
         container_name: opt_nginx
+        depends_on:
+            - app
         links:
             - app
         ports:
             - "80:80"
             - "443:443"
+        volumes_from:
+            - app:ro
+        volumes:
+            - "./docker/nginx.conf:/etc/nginx/nginx.conf"
+            - "./docker/.htpasswd:/etc/nginx/.htpasswd"
+            - "./docker/certificates/ssl-cert-snakeoil.pem:/etc/ssl/certs/ssl-cert-snakeoil.pem"
+            - "./docker/certificates/ssl-cert-snakeoil.key:/etc/ssl/private/ssl-cert-snakeoil.key"
 
     # Database container.
     db:
@@ -41,8 +49,8 @@ services:
     memcached:
         image: memcached:alpine
         container_name: opt_memcached
-        links:
-            - app
+        ports:
+            - "11211:11211"
 
     # Elasticsearch container.
     # The "vm.max_map_count" kernel setting needs to be set to at least 262144.

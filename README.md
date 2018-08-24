@@ -6,7 +6,7 @@ Docker image used on various projects are stored here for testing and documentat
 Images
 ------
 
-Geocal Gescom : Symfony 3
-OPT NC : Drupal 8 (+ PostGreSQL)
-SGCB : Drupal 7
-SMIT : Joomla
+- Geocal Gescom : Symfony 3
+- OPT NC : Drupal 8 (+ PostGreSQL)
+- SGCB : Drupal 7
+- SMIT : Joomla

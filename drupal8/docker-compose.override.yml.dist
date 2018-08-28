@@ -12,15 +12,15 @@ services:
         expose:
             - "9001"
         extra_hosts:
-            - "opt.local:127.0.0.1"
-            - "corporate.opt.local:127.0.0.1"
+            - "site1.local:127.0.0.1"
+            - "site2.local:127.0.0.1"
         environment:
             - XDEBUG_CONFIG=remote_host=172.16.36.16
 
     # Nginx container.
     nginx:
         image: nginx
-        container_name: opt_nginx
+        container_name: nginx
         depends_on:
             - app
         links:
@@ -39,7 +39,7 @@ services:
     # Database container.
     db:
         image: postgres:9.5
-        container_name: opt_postgres
+        container_name: postgres
         environment:
             POSTGRES_PASSWORD: root
         ports:
@@ -48,7 +48,7 @@ services:
     # Memcached container.
     memcached:
         image: memcached:alpine
-        container_name: opt_memcached
+        container_name: memcached
         ports:
             - "11211:11211"
 
@@ -58,7 +58,7 @@ services:
     # @see https://www.elastic.co/guide/en/elasticsearch/reference/current/docker.html#docker-cli-run-prod-mode
     elasticsearch:
         image: docker.elastic.co/elasticsearch/elasticsearch:5.6.4
-        container_name: opt_elasticsearch
+        container_name: elasticsearch
         ulimits:
           memlock:
             soft: -1
@@ -72,7 +72,7 @@ services:
 
     # Mailhog container.
     mailhog:
-        container_name: opt_mailhog
+        container_name: mailhog
         image: mailhog/mailhog
         ports:
           - "1025:1025"

@@ -4,19 +4,21 @@ services:
     app:
         links:
             - db
+            - memcached
         volumes:
             - .:/app
+            - "~/.composer:/root/.composer"
         expose:
             - "9001"
         extra_hosts:
-            - "smit.local:127.0.0.1"
+            - "site.local:127.0.0.1"
         environment:
             - XDEBUG_CONFIG=remote_host=172.16.36.16
 
     # Nginx container.
     nginx:
         image: nginx
-        container_name: smit_nginx
+        container_name: nginx
         depends_on:
             - app
         links:
@@ -35,7 +37,7 @@ services:
     # Database container.
 	db:
 		image: mysql:5.7
-		container_name: smit_mysql
+		container_name: mysql
 		command: --max_allowed_packet=32505856
 		environment:
 			MYSQL_ROOT_PASSWORD: root
@@ -43,14 +45,29 @@ services:
 			- "3306:3306"
 
 	# PHPMyAdmin container.
-    pma:
-        container_name: caledonia_pma
-        image: phpmyadmin/phpmyadmin
-        depends_on:
-            - db
-        environment:
-            PMA_HOST: db
-            PMA_USER: root
-            PMA_PASSWORD: root
+	pma:
+		container_name: pma
+		image: phpmyadmin/phpmyadmin
+		depends_on:
+			- db
+		environment:
+			PMA_HOST: db
+			PMA_USER: root
+			PMA_PASSWORD: root
+		ports:
+			- "8080:80"
+
+    # Memcached container.
+    memcached:
+        image: memcached:alpine
+        container_name: memcached
         ports:
-            - "8080:80"
+            - "11211:11211"
+
+    # Mailhog container.
+    mailhog:
+        container_name: mailhog
+        image: mailhog/mailhog
+        ports:
+          - "1025:1025"
+          - "8025:8025"

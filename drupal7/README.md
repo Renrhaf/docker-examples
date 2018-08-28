@@ -1,0 +1,1 @@
+Drupal 7 example with Linux Alpine, PHP 5.6, NGINX, MySQL.

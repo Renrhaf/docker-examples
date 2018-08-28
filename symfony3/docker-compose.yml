@@ -2,8 +2,8 @@ version: "2"
 
 services:
     # Web container.
-    # Log into it using "docker exec -it smit_web sh -l".
+    # Log into it using "docker exec -it web sh -l".
     app:
-        container_name: smit_web
+        container_name: web
         build:
             context: docker
